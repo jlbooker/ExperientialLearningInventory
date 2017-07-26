@@ -5,9 +5,9 @@ use Intern\WorkflowTransition;
 use Intern\Internship;
 
 class DepartmentApprove extends WorkflowTransition {
-    const sourceState = 'NewState';
-    const destState   = 'SigAuthReadyState';
-    const actionName  = 'Forward to Signature Authority';
+    const sourceState = 'CoordinatorApprovedState';
+    const destState   = 'DepartmentApprovedState';
+    const actionName  = 'Mark as Depatment Approved';
 
     public function getAllowedPermissionList(){
         return array('dept_approve','sig_auth_approve');

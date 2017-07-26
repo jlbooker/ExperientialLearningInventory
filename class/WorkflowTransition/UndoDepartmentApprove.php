@@ -5,9 +5,9 @@ use Intern\WorkflowTransition;
 use Intern\Internship;
 
 class UndoDepartmentApprove extends WorkflowTransition {
-    const sourceState = 'SigAuthReadyState';
-    const destState   = 'NewState';
-    const actionName  = 'Send back to advisor';
+    const sourceState = 'DepartmentApprovedState';
+    const destState   = 'CoordinatorApprovedState';
+    const actionName  = 'Return for Department Approval';
 
     const sortIndex = 6;
 
