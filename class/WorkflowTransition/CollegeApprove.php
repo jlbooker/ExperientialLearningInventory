@@ -4,6 +4,9 @@ namespace Intern\WorkflowTransition;
 use Intern\WorkflowTransition;
 use Intern\Internship;
 use Intern\ExpectedCourseFactory;
+use Intern\Exception\MissingDataException;
+use Intern\Email\UnusualCourseEmail;
+use Intern\InternSettings;
 
 class CollegeApprove extends WorkflowTransition {
     const sourceState = 'DepartmentApprovedState';
