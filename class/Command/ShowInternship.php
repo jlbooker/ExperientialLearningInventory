@@ -6,6 +6,7 @@ use \Intern\AgencyFactory;
 use \Intern\InternshipView;
 use \Intern\ExternalDataProviderFactory;
 use \Intern\TermProviderFactory;
+use \Intern\InternSettings;
 
 class ShowInternship {
 
@@ -17,6 +18,9 @@ class ShowInternship {
             \NQ::close();
             \PHPWS_Core::reroute('index.php');
         }
+
+        // Load system settings
+        $settings = InternSettings::getInstance();
 
         // Load the Internship
         try{
@@ -57,7 +61,7 @@ class ShowInternship {
         $termProvider = TermProviderFactory::getProvider();
         $termInfo = $termProvider->getTerm($intern->getTerm());
 
-        $view = new InternshipView($intern, $student, $wfState, $agency, $docs, $termInfo);
+        $view = new InternshipView($intern, $student, $wfState, $agency, $docs, $termInfo, $settings);
 
         return $view->display();
     }

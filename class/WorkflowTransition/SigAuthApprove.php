@@ -3,6 +3,7 @@
 namespace Intern\WorkflowTransition;
 use Intern\WorkflowTransition;
 use Intern\Internship;
+use Intern\InternSettings;
 
 class SigAuthApprove extends WorkflowTransition {
     const sourceState = 'SigAuthReadyState';
@@ -15,9 +16,14 @@ class SigAuthApprove extends WorkflowTransition {
 
     public function allowed(Internship $i)
     {
-        // If international and not certified by OIED, then return false
-        if($i->international == 1 && $i->oied_certified != 1){
-            return false;
+        $settings = InternSettings::getInstance();
+
+        // If international certification option is enabled, check status
+        if($settings->getRequireIntlCertification()){
+            // If international and not certified by OIED, then return false
+            if($i->international == 1 && $i->oied_certified != 1){
+                return false;
+            }
         }
 
         // Otherwise, check permissions as usual

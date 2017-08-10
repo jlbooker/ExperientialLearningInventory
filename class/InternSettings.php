@@ -206,4 +206,9 @@ class InternSettings {
 
         return $result;
     }
+
+    public function getRequireIntlCertification()
+    {
+        return \PHPWS_Settings::get('intern', 'requireIntlCertification');
+    }
 }
