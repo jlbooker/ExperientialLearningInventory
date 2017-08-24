@@ -9,6 +9,6 @@ class UndoCoordinatorApprove extends WorkflowTransition {
     const actionName  = 'Return for Coordinator Approval';
 
     public function getAllowedPermissionList(){
-        return array('coordinator_approve', 'department_approve');
+        return array('coordinator_approve', 'dept_approve');
     }
   }

@@ -10,6 +10,6 @@ class DepartmentApprove extends WorkflowTransition {
     const actionName  = 'Mark as Depatment Approved';
 
     public function getAllowedPermissionList(){
-        return array('dept_approve','sig_auth_approve');
+        return array('dept_approve');
     }
 }
