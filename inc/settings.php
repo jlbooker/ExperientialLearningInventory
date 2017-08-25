@@ -8,10 +8,11 @@ $settings = array('registrarEmail'              => null,
                   'internationalOfficeEmail'    => null,
                   'fromEmail'                   => null,
                   'emailDomain'                 => null,
-                  'backgroundCheckRequestEnabled'=>false,
-                  'drugCheckRequestEnabled'     => false,
+                  'backgroundCheckRequestEnabled'=>true,
+                  'drugCheckRequestEnabled'     => true,
                   'checkEmail'                  => null,
                   'systemName'                  => 'Internship Inventory',
                   'wsdlUri'                     => '',
-                  'unusualCourseEmail'          => null
+                  'unusualCourseEmail'          => null,
+                  'multiCampusEnabled'          => true
             );
