@@ -5,6 +5,7 @@ use \Intern\WorkflowStateFactory;
 use \Intern\ChangeHistory;
 use \Intern\AgencyFactory;
 use \Intern\DatabaseStorage;
+use \Intern\InternSettings;
 use \Intern\ExternalDataProviderFactory;
 use \Intern\Exception\StudentNotFoundException;
 
@@ -36,6 +37,8 @@ class SaveInternship {
 
     public function execute()
     {
+        $internSettings = InternSettings::getInstance();
+
         /**************
          * Sanity Checks
          */
@@ -232,7 +235,7 @@ class SaveInternship {
         }
         $i->student_zip = $_REQUEST['student_zip'];
 
-        if(\Current_User::isDeity()){
+        if(\Current_User::isDeity() && $internSettings->getMultiCampusEnabled()){
             $i->campus = $_REQUEST['campus'];
         }
 
@@ -292,31 +295,35 @@ class SaveInternship {
         /************
          * Background and Drug checks
         */
-        // Check if this has changed from no to yes for sending email
-        if($i->background_check == 0 && $_REQUEST['background_code'] == '1'){
-            // note the change for later
-            $backgroundCheck = true;
-        }else{
-            $backgroundCheck = false;
+        if($internSettings->getBackgroundCheckRequestEnabled()){
+            // Check if this has changed from no to yes for sending email
+            if($i->background_check == 0 && $_REQUEST['background_code'] == '1'){
+                // note the change for later
+                $backgroundCheck = true;
+            }else{
+                $backgroundCheck = false;
+            }
+
+            if($_REQUEST['background_code'] == '1'){
+                $i->background_check = 1;
+            }else if($_REQUEST['background_code'] == '0'){
+                $i->background_check = 0;
+            }
         }
 
-        if($_REQUEST['background_code'] == '1'){
-            $i->background_check = 1;
-        }else if($_REQUEST['background_code'] == '0'){
-            $i->background_check = 0;
-        }
+        if($internSettings->getDrugCheckRequestEnabled()){
+            if($i->drug_check == 0 && $_REQUEST['drug_code'] == '1'){
+                // note the change for later
+                $drugCheck = true;
+            }else{
+                $drugCheck = false;
+            }
 
-        if($i->drug_check == 0 && $_REQUEST['drug_code'] == '1'){
-            // note the change for later
-            $drugCheck = true;
-        }else{
-            $drugCheck = false;
-        }
-
-        if($_REQUEST['drug_code'] == '1'){
-            $i->drug_check = 1;
-        }else if($_REQUEST['drug_code'] == '0'){
-            $i->drug_check = 0;
+            if($_REQUEST['drug_code'] == '1'){
+                $i->drug_check = 1;
+            }else if($_REQUEST['drug_code'] == '0'){
+                $i->drug_check = 0;
+            }
         }
 
         // If we don't have a state and this is a new internship,
@@ -408,14 +415,14 @@ class SaveInternship {
 
             // Notify the faculty member that OIED has certified the internship
             if ($i->getFaculty() != null) {
-                $email = new \Intern\Email\OIEDCertifiedEmail(\Intern\InternSettings::getInstance(), $i);
+                $email = new \Intern\Email\OIEDCertifiedEmail($internSettings, $i);
                 $email->send();
             }
         }
 
         // If the background check or drug check status changed to true (computed earlier), then send a notification
-        if($backgroundCheck || $drugCheck) {
-            $email = new \Intern\Email\BackgroundCheckEmail(\Intern\InternSettings::getInstance(), $i, $agency, $backgroundCheck, $drugCheck);
+        if(($internSettings->getBackgroundCheckRequestEnabled() || $internSettings->getDrugCheckRequestEnabled()) && ($backgroundCheck || $drugCheck)) {
+            $email = new \Intern\Email\BackgroundCheckEmail($internSettings, $i, $agency, $backgroundCheck, $drugCheck);
             $email->send();
         }
 
