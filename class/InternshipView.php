@@ -20,8 +20,9 @@ class InternshipView {
     private $agency;
     private $docs;
     private $termInfo;
+    private $settings;
 
-    public function __construct(Internship $internship, Student $student = null, WorkflowState $wfState, Agency $agency, Array $docs, TermInfo $termInfo)
+    public function __construct(Internship $internship, Student $student = null, WorkflowState $wfState, Agency $agency, Array $docs, TermInfo $termInfo, InternSettings $settings )
     {
         $this->intern = $internship;
         $this->student = $student;
@@ -29,6 +30,7 @@ class InternshipView {
         $this->agency = $agency;
         $this->docs = $docs;
         $this->termInfo = $termInfo;
+        $this->settings = $settings;
     }
 
     public function display()
@@ -36,7 +38,7 @@ class InternshipView {
         $tpl = array();
 
         // Setup the form
-        $internshipForm = new EditInternshipFormView($this->intern, $this->student, $this->agency, $this->docs, $this->termInfo);
+        $internshipForm = new EditInternshipFormView($this->intern, $this->student, $this->agency, $this->docs, $this->termInfo, $this->settings);
 
         // Get the Form object
         $form = $internshipForm->getForm();
